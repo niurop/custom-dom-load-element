@@ -1,17 +1,8 @@
-class LoadElement extends HTMLElement {
-  onstart = null;
-  onend = null;
-  onprogress = null;
-  onerror = null;
-
+class LoadContent extends HTMLElement {
   src = null;
   #progress = 0.0;
   get progress() {
     return this.#progress;
-  }
-  #result = null;
-  get result() {
-    return this.#result;
   }
 
   load(src = null) {
@@ -20,39 +11,30 @@ class LoadElement extends HTMLElement {
 
     xhr.onload = () => {
       if (xhr.status != 200) {
-        this.onerror && this.onerror(xhr.status);
-        return;
+        throw `Error: [${src}] ${xhr.status}`;
       }
-      const result = xhr.response;
-      this.#result = result;
-      this.onend && this.onend(result);
+      this.outerHTML = xhr.response;
     };
 
     xhr.onprogress = (event) => {
-      const progress = event.loaded / event.total;
-      this.#progress = progress;
-      this.onprogress && this.onprogress(progress);
+      this.#progress = event.loaded / event.total;
     };
 
     xhr.onerror = () => {
-      this.onerror && this.onerror("other");
+      throw `Error: [${this.src}] other`;
     };
 
     xhr.send();
-
-    this.onstart && this.onstart();
   }
 
   static get observedAttributes() {
-    return ["src", "onstart", "onend", "onprogress", "onerror"];
+    return ["src"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (["onstart", "onend", "onprogress", "onerror"].indexOf(name) > -1)
-      this[name] = eval(newValue);
-    else this[name] = newValue;
+    this[name] = newValue;
     if (name == "src" && oldValue === null) this.load();
   }
 }
 
-customElements.define("load-element", LoadElement);
+customElements.define("load-content", LoadContent);
