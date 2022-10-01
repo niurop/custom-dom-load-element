@@ -1,25 +1,36 @@
 class Load {
+  onstart = () => console.log("Started");
+  onend = console.log;
+  onprogress = (percent) => {
+    console.log(percent);
+  };
+  onerror = (msg) => {
+    console.log("Error: " + msg);
+  };
+
   load(url) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
 
     xhr.onload = () => {
       if (xhr.status != 200) {
-        console.log("Error: " + xhr.status);
+        this.onerror(xhr.status);
         return;
       }
 
-      console.log(xhr.response);
+      this.onend(xhr.response);
     };
 
     xhr.onprogress = (event) => {
-      console.log(`Loaded ${event.loaded} of ${event.total}`);
+      this.onprogress(event.loaded / event.total);
     };
 
     xhr.onerror = () => {
-      console.log("Error: other");
+      this.onerror("other");
     };
 
     xhr.send();
+
+    this.onstart();
   }
 }
