@@ -4,7 +4,7 @@ class LoadElement extends HTMLElement {
   onprogress = null;
   onerror = null;
 
-  url = null;
+  src = null;
   #progress = 0.0;
   get progress() {
     return this.#progress;
@@ -14,9 +14,9 @@ class LoadElement extends HTMLElement {
     return this.#result;
   }
 
-  load(url = null) {
+  load(src = null) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", url || this.url);
+    xhr.open("GET", src || this.src);
 
     xhr.onload = () => {
       if (xhr.status != 200) {
@@ -44,14 +44,14 @@ class LoadElement extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["url", "onstart", "onend", "onprogress", "onerror"];
+    return ["src", "onstart", "onend", "onprogress", "onerror"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (["onstart", "onend", "onprogress", "onerror"].indexOf(name) > -1)
       this[name] = eval(newValue);
     else this[name] = newValue;
-    if (name == "url" && oldValue === null) this.load();
+    if (name == "src" && oldValue === null) this.load();
   }
 }
 

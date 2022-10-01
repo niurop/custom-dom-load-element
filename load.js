@@ -4,7 +4,7 @@ class Load {
   onprogress = null;
   onerror = null;
 
-  url = null;
+  src = null;
   #progress = 0.0;
   get progress() {
     return this.#progress;
@@ -14,9 +14,9 @@ class Load {
     return this.#result;
   }
 
-  load(url = null) {
+  load(src = null) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", url || this.url);
+    xhr.open("GET", src || this.src);
 
     xhr.onload = () => {
       if (xhr.status != 200) {
