@@ -1,17 +1,25 @@
-class Load extends HTMLElement {
-  #reader = new FileReader();
-  #url = null;
-  #result = null;
-
+class Load {
   load(url) {
-    this.#reader.readAsDataURL(file);
-    this.#reader.onload = (event) => {
-      this.#result = event.target.result;
-      console.log(this.#result);
-    };
-  }
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
 
-  get result() {
-    return this.#result;
+    xhr.onload = () => {
+      if (xhr.status != 200) {
+        console.log("Error: " + xhr.status);
+        return;
+      }
+
+      console.log(xhr.response);
+    };
+
+    xhr.onprogress = (event) => {
+      console.log(`Loaded ${event.loaded} of ${event.total}`);
+    };
+
+    xhr.onerror = () => {
+      console.log("Error: other");
+    };
+
+    xhr.send();
   }
 }
