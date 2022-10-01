@@ -1,12 +1,8 @@
 class Load {
-  onstart = () => console.log("Started");
-  onend = console.log;
-  onprogress = (percent) => {
-    console.log(percent);
-  };
-  onerror = (msg) => {
-    console.log("Error: " + msg);
-  };
+  onstart = null;
+  onend = null;
+  onprogress = null;
+  onerror = null;
 
   url = null;
   #progress = 0.0;
@@ -24,26 +20,26 @@ class Load {
 
     xhr.onload = () => {
       if (xhr.status != 200) {
-        this.onerror(xhr.status);
+        this.onerror && this.onerror(xhr.status);
         return;
       }
       const result = xhr.response;
       this.#result = result;
-      this.onend(result);
+      this.onend && this.onend(result);
     };
 
     xhr.onprogress = (event) => {
       const progress = event.loaded / event.total;
       this.#progress = progress;
-      this.onprogress(progress);
+      this.onprogress && this.onprogress(progress);
     };
 
     xhr.onerror = () => {
-      this.onerror("other");
+      this.onerror && this.onerror("other");
     };
 
     xhr.send();
 
-    this.onstart();
+    this.onstart && this.onstart();
   }
 }
