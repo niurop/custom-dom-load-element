@@ -8,14 +8,15 @@ class Load {
     console.log("Error: " + msg);
   };
 
+  url = null;
   #progress = 0.0;
   get progress() {
     return this.#progress;
   }
 
-  load(url) {
+  load(url = null) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
+    xhr.open("GET", url || this.url);
 
     xhr.onload = () => {
       if (xhr.status != 200) {
