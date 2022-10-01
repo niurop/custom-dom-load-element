@@ -13,6 +13,10 @@ class Load {
   get progress() {
     return this.#progress;
   }
+  #result = null;
+  get result() {
+    return this.#result;
+  }
 
   load(url = null) {
     const xhr = new XMLHttpRequest();
@@ -23,8 +27,9 @@ class Load {
         this.onerror(xhr.status);
         return;
       }
-
-      this.onend(xhr.response);
+      const result = xhr.response;
+      this.#result = result;
+      this.onend(result);
     };
 
     xhr.onprogress = (event) => {
