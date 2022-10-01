@@ -1,9 +1,5 @@
 class LoadContent extends HTMLElement {
   src = null;
-  #progress = 0.0;
-  get progress() {
-    return this.#progress;
-  }
 
   load(src = null) {
     const xhr = new XMLHttpRequest();
@@ -14,10 +10,6 @@ class LoadContent extends HTMLElement {
         throw `Error: [${src}] ${xhr.status}`;
       }
       this.outerHTML = xhr.response;
-    };
-
-    xhr.onprogress = (event) => {
-      this.#progress = event.loaded / event.total;
     };
 
     xhr.onerror = () => {
