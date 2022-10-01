@@ -8,6 +8,11 @@ class Load {
     console.log("Error: " + msg);
   };
 
+  #progress = 0.0;
+  get progress() {
+    return this.#progress;
+  }
+
   load(url) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
@@ -22,7 +27,9 @@ class Load {
     };
 
     xhr.onprogress = (event) => {
-      this.onprogress(event.loaded / event.total);
+      const progress = event.loaded / event.total;
+      this.#progress = progress;
+      this.onprogress(progress);
     };
 
     xhr.onerror = () => {
